@@ -12,4 +12,4 @@ javac \
     -classpath `hadoop classpath` \
     -d classes WordCounter.java
 
-jar -cvf wordcounter.jar -C classes
+jar -cvf wordcounter.jar -C classes/ .
