@@ -9,6 +9,8 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.*;
 
+import org.apache.hadoop.mapred.lib.HashPartitioner;
+
 public class WordCounter {
 
     public static class MyMapClass extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
@@ -47,6 +49,17 @@ public class WordCounter {
         }
     }
 
+    public static class SingleBinPartitioner extends MapReduceBase implements Partitioner<Text, IntWritable> {
+
+        public int getPartition(Text key, IntWritable value, int numPartitions) {
+
+            /*
+             * Always use the last bin.
+             */
+            return numPartitions - 1;
+        }
+    }
+
     public static void main(String[] args) throws Exception {
 
         JobConf conf = new JobConf(WordCounter.class);
@@ -60,6 +73,8 @@ public class WordCounter {
         conf.setMapperClass(MyMapClass.class);
         conf.setCombinerClass(MyReduceClass.class);
         conf.setReducerClass(MyReduceClass.class);
+        //conf.setPartitionerClass(SingleBinPartitioner.class);
+        conf.setPartitionerClass(HashPartitioner.class);
 
         conf.setInputFormat(TextInputFormat.class);
         conf.setOutputFormat(TextOutputFormat.class);
