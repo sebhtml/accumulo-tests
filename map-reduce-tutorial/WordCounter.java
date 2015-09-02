@@ -64,6 +64,12 @@ public class WordCounter {
         conf.setInputFormat(TextInputFormat.class);
         conf.setOutputFormat(TextOutputFormat.class);
 
+        /*
+         * We want only one part file, like
+         * /user/root/wordcount/output10/part-00000
+         */
+        //conf.setNumReduceTasks(1);
+
         FileInputFormat.setInputPaths(conf, new Path(args[0]));
         FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
